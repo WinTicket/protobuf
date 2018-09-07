@@ -107,15 +107,15 @@ var (
 		`"oBool":true,` +
 		`"oInt32":-32,` +
 		`"oInt32Str":-32,` +
-		`"oInt64":"-6400000000",` +
+		`"oInt64":-6400000000,` +
 		`"oInt64Str":"-6400000000",` +
 		`"oUint32":32,` +
 		`"oUint32Str":32,` +
-		`"oUint64":"6400000000",` +
+		`"oUint64":6400000000,` +
 		`"oUint64Str":"6400000000",` +
 		`"oSint32":-13,` +
 		`"oSint32Str":-13,` +
-		`"oSint64":"-2600000000",` +
+		`"oSint64":-2600000000,` +
 		`"oSint64Str":"-2600000000",` +
 		`"oFloat":3.14,` +
 		`"oFloatStr":3.14,` +
@@ -151,15 +151,15 @@ var (
   "oBool": true,
   "oInt32": -32,
   "oInt32Str": -32,
-  "oInt64": "-6400000000",
+  "oInt64": -6400000000,
   "oInt64Str": "-6400000000",
   "oUint32": 32,
   "oUint32Str": 32,
-  "oUint64": "6400000000",
+  "oUint64": 6400000000,
   "oUint64Str": "6400000000",
   "oSint32": -13,
   "oSint32Str": -13,
-  "oSint64": "-2600000000",
+  "oSint64": -2600000000,
   "oSint64Str": "-2600000000",
   "oFloat": 3.14,
   "oFloatStr": 3.14,
@@ -186,11 +186,11 @@ var (
 	repeatsObjectJSON = `{` +
 		`"rBool":[true,false,true],` +
 		`"rInt32":[-3,-4,-5],` +
-		`"rInt64":["-123456789","-987654321"],` +
+		`"rInt64":[-123456789,-987654321],` +
 		`"rUint32":[1,2,3],` +
-		`"rUint64":["6789012345","3456789012"],` +
+		`"rUint64":[6789012345,3456789012],` +
 		`"rSint32":[-1,-2,-3],` +
-		`"rSint64":["-6789012345","-3456789012"],` +
+		`"rSint64":[-6789012345,-3456789012],` +
 		`"rFloat":[3.14,6.28],` +
 		`"rDouble":[2.99792458e+28,6.62606957e-34],` +
 		`"rString":["happy","days"],` +
@@ -209,8 +209,8 @@ var (
     -5
   ],
   "rInt64": [
-    "-123456789",
-    "-987654321"
+    -123456789,
+    -987654321
   ],
   "rUint32": [
     1,
@@ -218,8 +218,8 @@ var (
     3
   ],
   "rUint64": [
-    "6789012345",
-    "3456789012"
+    6789012345,
+    3456789012
   ],
   "rSint32": [
     -1,
@@ -227,8 +227,8 @@ var (
     -3
   ],
   "rSint64": [
-    "-6789012345",
-    "-3456789012"
+    -6789012345,
+    -3456789012
   ],
   "rFloat": [
     3.14,
@@ -264,7 +264,7 @@ var (
 	complexObjectJSON = `{"color":"GREEN",` +
 		`"rColor":["RED","GREEN","BLUE"],` +
 		`"simple":{"oInt32":-32},` +
-		`"rSimple":[{"oInt32":-32},{"oInt64":"25"}],` +
+		`"rSimple":[{"oInt32":-32},{"oInt64":25}],` +
 		`"repeats":{"rString":["roses","red"]},` +
 		`"rRepeats":[{"rString":["roses","red"]},{"rString":["violets","blue"]}]` +
 		`}`
@@ -284,7 +284,7 @@ var (
       "oInt32": -32
     },
     {
-      "oInt64": "25"
+      "oInt64": 25
     }
   ],
   "repeats": {
@@ -513,8 +513,8 @@ var marshalingTests = []struct {
 
 	{"DoubleValue", marshaler, &pb.KnownTypes{Dbl: &wpb.DoubleValue{Value: 1.2}}, `{"dbl":1.2}`},
 	{"FloatValue", marshaler, &pb.KnownTypes{Flt: &wpb.FloatValue{Value: 1.2}}, `{"flt":1.2}`},
-	{"Int64Value", marshaler, &pb.KnownTypes{I64: &wpb.Int64Value{Value: -3}}, `{"i64":"-3"}`},
-	{"UInt64Value", marshaler, &pb.KnownTypes{U64: &wpb.UInt64Value{Value: 3}}, `{"u64":"3"}`},
+	{"Int64Value", marshaler, &pb.KnownTypes{I64: &wpb.Int64Value{Value: -3}}, `{"i64":-3}`},
+	{"UInt64Value", marshaler, &pb.KnownTypes{U64: &wpb.UInt64Value{Value: 3}}, `{"u64":3}`},
 	{"Int32Value", marshaler, &pb.KnownTypes{I32: &wpb.Int32Value{Value: -4}}, `{"i32":-4}`},
 	{"UInt32Value", marshaler, &pb.KnownTypes{U32: &wpb.UInt32Value{Value: 4}}, `{"u32":4}`},
 	{"BoolValue", marshaler, &pb.KnownTypes{Bool: &wpb.BoolValue{Value: true}}, `{"bool":true}`},
@@ -984,7 +984,7 @@ func TestAnyWithCustomResolver(t *testing.T) {
 	} else if resolvedTypeUrls[0] != "https://foobar.com/some.random.MessageKind" {
 		t.Errorf("custom resolver was invoked with wrong URL: got %q, wanted %q", resolvedTypeUrls[0], "https://foobar.com/some.random.MessageKind")
 	}
-	wanted := `{"@type":"https://foobar.com/some.random.MessageKind","oBool":true,"oInt64":"1020304","oString":"foobar","oBytes":"AQIDBA=="}`
+	wanted := `{"@type":"https://foobar.com/some.random.MessageKind","oBool":true,"oInt64":1020304,"oString":"foobar","oBytes":"AQIDBA=="}`
 	if js != wanted {
 		t.Errorf("marshalling JSON produced incorrect output: got %s, wanted %s", js, wanted)
 	}
