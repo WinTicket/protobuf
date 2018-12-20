@@ -477,6 +477,18 @@ func TestMarshalingNil(t *testing.T) {
 	}
 }
 
+func TestMarshalingLargeNumber(t *testing.T) {
+	msgInt64 := &wpb.Int64Value{Value: 9007199254740991 + 1}
+	msgUint64 := &wpb.UInt64Value{Value: 9007199254740991 + 1}
+	m := &Marshaler{}
+	if _, err := m.MarshalToString(msgInt64); err == nil {
+		t.Errorf("marshaling large int64 returned no error")
+	}
+	if _, err := m.MarshalToString(msgUint64); err == nil {
+		t.Errorf("marshaling large uint64 returned no error")
+	}
+}
+
 func TestMarshalIllegalTime(t *testing.T) {
 	tests := []struct {
 		pb   proto.Message

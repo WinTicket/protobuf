@@ -617,6 +617,22 @@ func (m *Marshaler) marshalValue(out *errWriter, prop *proto.Properties, v refle
 		}
 	}
 
+	// Detect overflowing of numbers
+	// cf: https://developer.mozilla.org/ja/docs/Web/JavaScript/Reference/Global_Objects/Number/MAX_SAFE_INTEGER
+	const maxValueJSNumber = 9007199254740991
+	if v.Kind() == reflect.Int64 {
+		i := v.Int()
+		if i > maxValueJSNumber {
+			return errors.New("int64 number overflowed MAX_SAFE_INTEGER")
+		}
+	}
+	if v.Kind() == reflect.Uint64 {
+		i := v.Uint()
+		if i > maxValueJSNumber {
+			return errors.New("uint64 number overflowed MAX_SAFE_INTEGER")
+		}
+	}
+
 	// Default handling defers to the encoding/json library.
 	b, err := json.Marshal(v.Interface())
 	if err != nil {
